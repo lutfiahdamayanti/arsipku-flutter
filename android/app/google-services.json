@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "817017672597",
+    "project_id": "arsipku-eb7e6",
+    "storage_bucket": "arsipku-eb7e6.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:817017672597:android:ad25ca3e3a2c68a9025c9c",
+        "android_client_info": {
+          "package_name": "com.example.arsipku"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "817017672597-cnsi43m5dlmuf2cvo6gh6gu7f04umh6h.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.arsipku",
+            "certificate_hash": "e1fa047b12e27487123597331b66243adce2e286"
+          }
+        },
+        {
+          "client_id": "817017672597-9coa66280k08s0ss56rhcmfefpjr0ekf.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCfggKxWctp8aGSaln4dPCRasn3cXIPqxw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "817017672597-9coa66280k08s0ss56rhcmfefpjr0ekf.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
