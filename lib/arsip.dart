@@ -1,12 +1,13 @@
-import 'package:arsipku/edit_arsip.dart';
 import 'package:flutter/material.dart';
 import 'package:arsipku/home.dart';
 import 'package:arsipku/profil.dart';
 import 'package:arsipku/tambah_arsip.dart';
 import 'package:arsipku/notifications.dart';
 import 'package:arsipku/models/arsip_model.dart';
-import 'package:arsipku/services/arsip_service.dart';
+// import 'package:arsipku/services/arsip_service.dart';
 import 'package:arsipku/edit_arsip.dart';
+import 'package:provider/provider.dart';
+import 'providers/arsip_provider.dart';
 
 class ArsipPage extends StatefulWidget {
   const ArsipPage({super.key});
@@ -31,18 +32,21 @@ class _ArsipPageState extends State<ArsipPage> {
     'Dokumentasi',
   ];
 
-  int totalArsip = 0;
+  // int totalArsip = 0;
   @override
   void initState() {
     super.initState();
-    loadTotalArsip();
-  }
-  Future<void> loadTotalArsip() async {
-    final data = await ArsipService().getArsip();
-    setState(() {
-      totalArsip = data.length;
+
+    Future.microtask(() {
+      context.read<ArsipProvider>().loadArsip();
     });
   }
+  // Future<void> loadTotalArsip() async {
+  //   final data = await ArsipService().getArsip();
+  //   setState(() {
+  //     totalArsip = data.length;
+  //   });
+  // }
 
 
   @override
@@ -219,7 +223,7 @@ class _ArsipPageState extends State<ArsipPage> {
                   SizedBox(height: 10),
 
                   Text(
-                    '$totalArsip dokumen tersimpan dalam arsip.',
+                    '${context.watch<ArsipProvider>().arsipList.length} dokumen tersimpan dalam arsip.',
                     style: TextStyle(
                       fontSize: 16,
                       color: Color(0xFF6D214F),
@@ -232,74 +236,75 @@ class _ArsipPageState extends State<ArsipPage> {
             const SizedBox(height: 25),
 
             Expanded(
-            child: FutureBuilder<List<Arsip>>(
-              future: ArsipService().getArsip(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState ==
-                ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                if (snapshot.hasError) {
-                    return Center(
-                      child: Text(
-                      snapshot.error.toString(),
-                    ),
-                  );
-                }
-                final arsipList = snapshot.data ?? [];
-                List<Arsip> filteredList = arsipList;
+  child: Consumer<ArsipProvider>(
+    builder: (context, provider, child) {
 
-                if (kategoriTerpilih != 'Semua') {
-                  filteredList = arsipList.where((arsip) {
-                    return arsip.kategori == kategoriTerpilih;
-                  }).toList();
-                }
+      final arsipList = provider.arsipList;
 
-                if (keyword.isNotEmpty) {
-                  filteredList = filteredList.where((arsip) {
-                    return arsip.judul
-                    .toLowerCase()
-                    .contains(keyword.toLowerCase());
-                  }).toList();
-                }
-                
-                if (arsipList.isEmpty) {
-                  return const Center(
-                    child: Text(
-                      'Belum ada arsip',
-                    ),
-                  );
-                }
-                return ListView.builder(
-                  itemCount: filteredList.length,
-                  itemBuilder: (context, index) {
-                    final arsip = filteredList[index];
-                    return GestureDetector(
-                      onTap: () async {
-                        final refresh = await Navigator.push(
-                          context, MaterialPageRoute(
-                            builder: (_) => EditArsipPage(
-                              arsip: arsip,
-                            ),
-                          ),
-                        );
-                        if (refresh == true) {
-                          setState(() {});
-                        }
-                      },
-                      child: _arsipCard(
-                        title: arsip.judul, 
-                        kategori: arsip.kategori, 
-                        tanggal: arsip.tanggal
-                      ),
-                    );
-                  },
-                );
-              },
-            ),
+      List<Arsip> filteredList = arsipList;
+
+      if (kategoriTerpilih != 'Semua') {
+        filteredList = filteredList.where((arsip) {
+          return arsip.kategori == kategoriTerpilih;
+        }).toList();
+      }
+
+      if (keyword.isNotEmpty) {
+        filteredList = filteredList.where((arsip) {
+          return arsip.judul
+              .toLowerCase()
+              .contains(keyword.toLowerCase());
+        }).toList();
+      }
+
+      if (filteredList.isEmpty) {
+        return const Center(
+          child: Text(
+            'Belum ada arsip',
           ),
+        );
+      }
+
+      return ListView.builder(
+        itemCount: filteredList.length,
+        itemBuilder: (context, index) {
+
+          final arsip = filteredList[index];
+
+          return GestureDetector(
+            onTap: () async {
+
+              final refresh =
+                  await Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (_) =>
+                          EditArsipPage(
+                        arsip: arsip,
+                      ),
+                    ),
+                  );
+
+              if (refresh == true) {
+
+                context
+                    .read<ArsipProvider>()
+                    .loadArsip();
+
+              }
+            },
+
+            child: _arsipCard(
+              title: arsip.judul,
+              kategori: arsip.kategori,
+              tanggal: arsip.tanggal,
+            ),
+          );
+        },
+      );
+    },
+  ),
+)
         ],
       ),
       ),
