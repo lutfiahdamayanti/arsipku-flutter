@@ -4,16 +4,29 @@ import 'firebase_options.dart';
 import 'splash_screen.dart'; 
 import 'package:provider/provider.dart';
 import 'providers/arsip_provider.dart';
+import 'services/socket_services.dart';
+import 'providers/notif_provider.dart';
+import 'services/local_notification_service.dart';
 
 Future<void> main() async{
   WidgetsFlutterBinding.ensureInitialized();
+  await LocalNotificationService.init();
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  SocketService.instance.connect();
   runApp(
-    ChangeNotifierProvider(
-      create: (_) => ArsipProvider(),
+    MultiProvider(
+      providers:[
+        ChangeNotifierProvider(
+          create: (_) => ArsipProvider(),
+        ),
+
+        ChangeNotifierProvider(
+          create: (_) => NotifProvider(),
+        ),
+      ],
       child: const MyApp(),
     ),
   );
@@ -31,9 +44,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         useMaterial3: true,
         scaffoldBackgroundColor: const Color(0xFFF8FAFF), // Ghost White
-        
         fontFamily: 'Sans-Serif',
-        
         colorScheme: ColorScheme.fromSeed(
           seedColor: const Color(0xFF475569), // Slate Blue
           primary: const Color(0xFF475569),

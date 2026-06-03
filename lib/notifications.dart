@@ -1,115 +1,174 @@
 import 'package:flutter/material.dart';
+import 'package:arsipku/services/socket_services.dart';
 
-class NotificationPage extends StatelessWidget {
+class NotificationPage extends StatefulWidget {
+
   const NotificationPage({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: const Color(0xFFF9F3F6),
+  State<NotificationPage> createState() =>
+      _NotificationPageState();
+}
 
-      appBar: AppBar(
-        backgroundColor: const Color(0xFFF9F3F6),
-        elevation: 0,
-        centerTitle: true,
-        title: const Text(
-          'Notifikasi',
-          style: TextStyle(
-            color: Color(0xFF6D4C57),
-            fontWeight: FontWeight.bold,
-          ),
-        ),
-      ),
+class _NotificationPageState
+    extends State<NotificationPage> {
 
-      body: ListView(
-        padding: const EdgeInsets.all(20),
-        children: [
+  List<String> notifications = [];
 
-          _notifCard(
-            title: 'Arsip berhasil ditambahkan',
-            subtitle: 'Notulensi Rapat HIMA telah tersimpan',
-            icon: Icons.check_circle_outline,
-          ),
+  @override
+  void initState() {
 
-          const SizedBox(height: 15),
+    super.initState();
 
-          _notifCard(
-            title: 'Surat Masuk Baru',
-            subtitle: 'Undangan Seminar Nasional',
-            icon: Icons.mail_outline,
-          ),
+    SocketService.instance.socket.on(
 
-          const SizedBox(height: 15),
+      'announcement:receive',
 
-          _notifCard(
-            title: 'Arsip diperbarui',
-            subtitle: 'Proposal Kegiatan telah diedit',
-            icon: Icons.edit_outlined,
-          ),
+      (data) {
 
-          const SizedBox(height: 15),
+        setState(() {
 
-          _notifCard(
-            title: 'Backup berhasil',
-            subtitle: 'Data arsip berhasil dicadangkan',
-            icon: Icons.backup_outlined,
-          ),
-        ],
-      ),
+          notifications.insert(
+            0,
+            data['message'],
+          );
+
+        });
+
+      },
+
     );
   }
 
-  Widget _notifCard({
-    required String title,
-    required String subtitle,
-    required IconData icon,
-  }) {
-    return Container(
-      padding: const EdgeInsets.all(18),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(20),
-      ),
+  @override
+  Widget build(BuildContext context) {
 
-      child: Row(
-        children: [
+    return Scaffold(
 
-          CircleAvatar(
-            backgroundColor: const Color(0xFFFFF1F5),
-            child: Icon(
-              icon,
-              color: const Color(0xFFF48FB1),
-            ),
+      backgroundColor:
+      const Color(0xFFF9F3F6),
+
+      appBar: AppBar(
+
+        backgroundColor:
+        const Color(0xFFF9F3F6),
+
+        elevation: 0,
+
+        centerTitle: true,
+
+        title: const Text(
+
+          'Notifikasi',
+
+          style: TextStyle(
+
+            color: Color(0xFF6D4C57),
+
+            fontWeight:
+            FontWeight.bold,
+
           ),
 
-          const SizedBox(width: 15),
+        ),
 
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-
-                Text(
-                  title,
-                  style: const TextStyle(
-                    fontWeight: FontWeight.bold,
-                    color: Color(0xFF6D4C57),
-                  ),
-                ),
-
-                const SizedBox(height: 5),
-
-                Text(
-                  subtitle,
-                  style: const TextStyle(
-                    color: Colors.grey,
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
       ),
+
+      body: notifications.isEmpty
+
+          ? const Center(
+
+              child: Text(
+                'Belum ada notifikasi',
+              ),
+
+            )
+
+          : ListView.builder(
+
+              padding:
+              const EdgeInsets.all(20),
+
+              itemCount:
+              notifications.length,
+
+              itemBuilder:
+
+                  (context,index){
+
+                return Container(
+
+                  margin:
+                  const EdgeInsets.only(
+                    bottom:15,
+                  ),
+
+                  padding:
+                  const EdgeInsets.all(
+                    18,
+                  ),
+
+                  decoration:
+                  BoxDecoration(
+
+                    color:
+                    Colors.white,
+
+                    borderRadius:
+                    BorderRadius.circular(
+                      20,
+                    ),
+
+                  ),
+
+                  child: Row(
+
+                    children:[
+
+                      const CircleAvatar(
+
+                        backgroundColor:
+                        Color(0xFFFFF1F5),
+
+                        child: Icon(
+
+                          Icons.notifications,
+
+                          color:
+                          Color(
+                            0xFFF48FB1,
+                          ),
+
+                        ),
+
+                      ),
+
+                      const SizedBox(
+                        width:15,
+                      ),
+
+                      Expanded(
+
+                        child: Text(
+
+                          notifications[
+                          index
+                          ],
+
+                        ),
+
+                      )
+
+                    ],
+
+                  ),
+
+                );
+
+              },
+
+            ),
+
     );
   }
 }

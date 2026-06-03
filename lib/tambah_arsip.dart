@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:arsipku/services/arsip_service.dart';
 import 'package:file_picker/file_picker.dart';
+import 'package:arsipku/services/socket_services.dart';
 
 class TambahArsipPage extends StatefulWidget {
   const TambahArsipPage({super.key});
@@ -217,37 +218,39 @@ class _TambahArsipPageState extends State<TambahArsipPage> {
               child: ElevatedButton(
                 onPressed: () async {
                   try {
-    bool berhasil = await ArsipService().createArsip(
-      judul: judulController.text,
-      kategori: kategori,
-      tanggal: tanggalController.text,
-      deskripsi: deskripsiController.text,
-    );
+                    bool berhasil = await ArsipService().createArsip(
+                      judul: judulController.text,
+                      kategori: kategori,
+                      tanggal: tanggalController.text,
+                      deskripsi: deskripsiController.text,
+                    );
+                    if (berhasil) {
+                      SocketService.instance.sendAnnouncement(
+                        "Arsip ${judulController.text} ditambahkan",);
 
-    if (berhasil) {
-      judulController.clear();
-      deskripsiController.clear();
-      tanggalController.clear();
 
-      setState(() {
-        file = null;
-        fileName = null;
-      });
+                      judulController.clear();
+                      deskripsiController.clear();
+                      tanggalController.clear();
+                      setState(() {
+                        file = null;
+                        fileName = null;
+                      });
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Arsip berhasil disimpan')),
-      );
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Gagal menyimpan arsip')),
-      );
-    }
-  } catch (e) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Error: $e')),
-    );
-  }
-},
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Arsip berhasil disimpan')),
+                      );
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        const SnackBar(content: Text('Gagal menyimpan arsip')),
+                      );
+                    }
+                  } catch (e) {
+                      ScaffoldMessenger.of(context).showSnackBar(
+                        SnackBar(content: Text('Error: $e')),
+                      );
+                    }
+                },
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFFF48FB1),
                   shape: RoundedRectangleBorder(
