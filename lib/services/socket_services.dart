@@ -9,7 +9,7 @@ class SocketService {
   
   void connect(){
     socket = IO.io(
-      'http:// 192.168.1.7:3000',
+      'http://192.168.1.9:3000',
       IO.OptionBuilder()
       .setTransports(['websocket'])
       .build(),

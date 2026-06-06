@@ -12,10 +12,13 @@ class NotifProvider extends ChangeNotifier {
   NotifProvider(){
 
     SocketService.instance.socket.on(
+
       'announcement:receive',
-      
 
       (data){
+
+        print("PROVIDER RECEIVE");
+        print(data);
 
         addNotif(
 

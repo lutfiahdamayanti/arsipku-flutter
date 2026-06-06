@@ -7,18 +7,32 @@ import 'providers/arsip_provider.dart';
 import 'services/socket_services.dart';
 import 'providers/notif_provider.dart';
 import 'services/local_notification_service.dart';
+import 'services/fcm_service.dart';
 
-Future<void> main() async{
+Future<void> main() async {
+
   WidgetsFlutterBinding.ensureInitialized();
-  await LocalNotificationService.init();
 
+  // FIREBASE DULU
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+
+  // BARU FCM
+  // await FCMService.init();
+
+  // LOCAL NOTIF
+  await LocalNotificationService.init();
+
+  // SOCKET
   SocketService.instance.connect();
+
   runApp(
+
     MultiProvider(
-      providers:[
+
+      providers: [
+
         ChangeNotifierProvider(
           create: (_) => ArsipProvider(),
         ),
@@ -26,10 +40,15 @@ Future<void> main() async{
         ChangeNotifierProvider(
           create: (_) => NotifProvider(),
         ),
+
       ],
+
       child: const MyApp(),
+
     ),
+
   );
+
 }
 
 class MyApp extends StatelessWidget {

@@ -1,174 +1,83 @@
 import 'package:flutter/material.dart';
-import 'package:arsipku/services/socket_services.dart';
+import 'package:provider/provider.dart';
+import 'providers/notif_provider.dart';
 
-class NotificationPage extends StatefulWidget {
+class NotificationPage extends StatelessWidget {
 
-  const NotificationPage({super.key});
+ const NotificationPage({super.key});
 
-  @override
-  State<NotificationPage> createState() =>
-      _NotificationPageState();
-}
+ @override
+ Widget build(BuildContext context){
 
-class _NotificationPageState
-    extends State<NotificationPage> {
+   final notifProvider =
+       context.watch<NotifProvider>();
 
-  List<String> notifications = [];
+   return Scaffold(
 
-  @override
-  void initState() {
+     backgroundColor:
+     const Color(0xFFF9F3F6),
 
-    super.initState();
+     appBar: AppBar(
 
-    SocketService.instance.socket.on(
+       backgroundColor:
+       const Color(0xFFF9F3F6),
 
-      'announcement:receive',
+       title: const Text(
+         "Notifikasi",
+       ),
 
-      (data) {
+     ),
 
-        setState(() {
+     body:
 
-          notifications.insert(
-            0,
-            data['message'],
-          );
+     notifProvider.notifList.isEmpty
 
-        });
+     ? const Center(
 
-      },
+         child:
+         Text(
+           "Belum ada notifikasi",
+         ),
 
-    );
-  }
+       )
 
-  @override
-  Widget build(BuildContext context) {
+     :
 
-    return Scaffold(
+     ListView.builder(
 
-      backgroundColor:
-      const Color(0xFFF9F3F6),
+       itemCount:
+       notifProvider.notifList.length,
 
-      appBar: AppBar(
+       itemBuilder:(context,index){
 
-        backgroundColor:
-        const Color(0xFFF9F3F6),
+         final notif =
+             notifProvider.notifList[index];
 
-        elevation: 0,
+         return ListTile(
 
-        centerTitle: true,
+           leading:
+           const Icon(
+             Icons.notifications,
+           ),
 
-        title: const Text(
+           title:
+           Text(
+             notif.title,
+           ),
 
-          'Notifikasi',
+           subtitle:
+           Text(
+             notif.subtitle,
+           ),
 
-          style: TextStyle(
+         );
 
-            color: Color(0xFF6D4C57),
+       },
 
-            fontWeight:
-            FontWeight.bold,
+     ),
 
-          ),
+   );
 
-        ),
+ }
 
-      ),
-
-      body: notifications.isEmpty
-
-          ? const Center(
-
-              child: Text(
-                'Belum ada notifikasi',
-              ),
-
-            )
-
-          : ListView.builder(
-
-              padding:
-              const EdgeInsets.all(20),
-
-              itemCount:
-              notifications.length,
-
-              itemBuilder:
-
-                  (context,index){
-
-                return Container(
-
-                  margin:
-                  const EdgeInsets.only(
-                    bottom:15,
-                  ),
-
-                  padding:
-                  const EdgeInsets.all(
-                    18,
-                  ),
-
-                  decoration:
-                  BoxDecoration(
-
-                    color:
-                    Colors.white,
-
-                    borderRadius:
-                    BorderRadius.circular(
-                      20,
-                    ),
-
-                  ),
-
-                  child: Row(
-
-                    children:[
-
-                      const CircleAvatar(
-
-                        backgroundColor:
-                        Color(0xFFFFF1F5),
-
-                        child: Icon(
-
-                          Icons.notifications,
-
-                          color:
-                          Color(
-                            0xFFF48FB1,
-                          ),
-
-                        ),
-
-                      ),
-
-                      const SizedBox(
-                        width:15,
-                      ),
-
-                      Expanded(
-
-                        child: Text(
-
-                          notifications[
-                          index
-                          ],
-
-                        ),
-
-                      )
-
-                    ],
-
-                  ),
-
-                );
-
-              },
-
-            ),
-
-    );
-  }
 }

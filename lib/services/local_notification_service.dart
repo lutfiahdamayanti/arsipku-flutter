@@ -6,10 +6,10 @@ class LocalNotificationService {
       flutterLocalNotificationsPlugin =
       FlutterLocalNotificationsPlugin();
 
-  static Future<void> init() async {
+  static Future init() async {
 
     const AndroidInitializationSettings
-        androidInitializationSettings =
+        initializationSettingsAndroid =
         AndroidInitializationSettings(
       '@mipmap/ic_launcher',
     );
@@ -18,7 +18,7 @@ class LocalNotificationService {
         initializationSettings =
         InitializationSettings(
       android:
-          androidInitializationSettings,
+          initializationSettingsAndroid,
     );
 
     await flutterLocalNotificationsPlugin
@@ -27,39 +27,52 @@ class LocalNotificationService {
     );
   }
 
-  static Future<void> showNotification({
+  static Future showNotification({
+
     required String title,
+
     required String body,
+
   }) async {
 
     const AndroidNotificationDetails
-        androidNotificationDetails =
+        androidDetails =
         AndroidNotificationDetails(
 
-      'arsipku_channel',
-      'ArsipKu Notification',
+      "arsip_channel",
 
-      importance: Importance.max,
-      priority: Priority.high,
+      "Arsip Notification",
+
+      importance:
+          Importance.max,
+
+      priority:
+          Priority.high,
+
+      playSound: true,
 
     );
 
     const NotificationDetails
-        notificationDetails =
+        details =
         NotificationDetails(
+
       android:
-          androidNotificationDetails,
+          androidDetails,
+
     );
 
-    await flutterLocalNotificationsPlugin
-        .show(
+    await flutterLocalNotificationsPlugin.show(
 
-      0,
+      DateTime.now()
+          .millisecondsSinceEpoch ~/1000,
+
       title,
+
       body,
-      notificationDetails,
+
+      details,
 
     );
   }
-
 }
