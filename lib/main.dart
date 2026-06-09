@@ -28,25 +28,17 @@ Future<void> main() async {
   SocketService.instance.connect();
 
   runApp(
-
     MultiProvider(
-
       providers: [
-
         ChangeNotifierProvider(
           create: (_) => ArsipProvider(),
         ),
-
         ChangeNotifierProvider(
           create: (_) => NotifProvider(),
-        ),
-
+        )
       ],
-
       child: const MyApp(),
-
     ),
-
   );
 
 }
