@@ -5,7 +5,7 @@ import '../models/arsip_model.dart';
 class ArsipService {
 
   static const String baseUrl =
-      'http://192.168.1.7/arsipku_backend'; // Ganti sesuai IP server lokal masing-masing
+      'http://192.168.1.206/arsipku_backend'; // Ganti sesuai IP server lokal masing-masing
 
   Future<List<Arsip>> getArsip() async {
     final response = await http.get(

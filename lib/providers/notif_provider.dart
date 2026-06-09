@@ -4,17 +4,12 @@ import '../services/local_notification_service.dart';
 import '../services/socket_services.dart';
 
 class NotifProvider extends ChangeNotifier {
-
   final List<NotifModel> _notifList = [];
-
   List<NotifModel> get notifList => _notifList;
 
   NotifProvider(){
-
     SocketService.instance.socket.on(
-
       'announcement:receive',
-
       (data){
 
         print("PROVIDER RECEIVE");
