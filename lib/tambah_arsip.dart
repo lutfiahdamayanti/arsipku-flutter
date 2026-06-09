@@ -51,6 +51,10 @@ class _TambahArsipPageState extends State<TambahArsipPage> {
       appBar: AppBar(
         backgroundColor: const Color(0xFFF9F3F6),
         elevation: 0,
+        centerTitle: true,
+        iconTheme: const IconThemeData(
+          color: Color(0xFF6D4C57),
+        ),
         title: const Text(
           'Tambah Arsip',
           style: TextStyle(
@@ -81,10 +85,19 @@ class _TambahArsipPageState extends State<TambahArsipPage> {
               controller: judulController,
               decoration: InputDecoration(
                 filled: true,
-                fillColor: Colors.white,
-                border: OutlineInputBorder(
+                fillColor:const Color(0xFFFFFCFD),
+                enabledBorder: OutlineInputBorder(
                   borderRadius: BorderRadius.circular(18),
-                  borderSide: BorderSide.none,
+                  borderSide: BorderSide(
+                    color: Color(0xFFF3D4DF),
+                  ),
+                ),
+                focusedBorder: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(18),
+                  borderSide: BorderSide(
+                    color: Color(0xFFB04C7A),
+                    width: 1.5,
+                  ),
                 ),
               ),
             ),
@@ -102,6 +115,8 @@ class _TambahArsipPageState extends State<TambahArsipPage> {
             const SizedBox(height: 8),
 
             DropdownButtonFormField(
+              dropdownColor: const Color(0xFFFFFCFD),
+              iconEnabledColor: const Color(0xFFB04C7A),
               value: kategori,
               items: kategoriList.map((item) {
                 return DropdownMenuItem(
@@ -186,14 +201,14 @@ class _TambahArsipPageState extends State<TambahArsipPage> {
                   color: Colors.white,
                   borderRadius: BorderRadius.circular(18),
                   border: Border.all(
-                    color: const Color(0xFFF8BBD0),
+                    color: const Color(0xFFF1D1DC),
                   ),
                 ),
                   child: Column(
                     children: [
                       const Icon(
                         Icons.upload_file_rounded,
-                        color: Color(0xFFF48FB1), size: 40,
+                        color: Color(0xFFB04C7A), size: 40,
                       ),
                       const SizedBox(height: 8),
                       const Text('Pilih File (PDF /Gambar)'),
@@ -252,7 +267,9 @@ class _TambahArsipPageState extends State<TambahArsipPage> {
                     }
                 },
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFFF48FB1),
+                  backgroundColor: const Color(0xFFB04C7A),
+                  elevation: 5,
+                  shadowColor: Colors.black26,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(18),
                   ),
@@ -260,7 +277,7 @@ class _TambahArsipPageState extends State<TambahArsipPage> {
                 child: const Text(
                   'Simpan Arsip',
                   style: TextStyle(
-                    color: Colors.white,
+                    color:const Color(0xFFFFFCFD),
                     fontWeight: FontWeight.bold,
                   ),
                 ),
