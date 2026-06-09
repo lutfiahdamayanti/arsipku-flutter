@@ -8,6 +8,7 @@ import 'package:arsipku/notifications.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'models/arsip_model.dart';
 import 'services/arsip_service.dart';
+import 'detail_arsip.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({super.key});
@@ -276,10 +277,28 @@ class _HomePageState extends State<HomePage> {
                       padding: const EdgeInsets.only(
                         bottom: 15,
                       ),
-                      child: _recentCard(
-                        title: arsip.judul,
-                        kategori: arsip.kategori,
-                        date: arsip.tanggal,
+                      child: InkWell(
+                        onTap:(){
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder:
+                              (_)=>DetailArsipPage(
+                                arsip: {
+                                  'judul':arsip.judul,
+                                  'kategori':arsip.kategori,
+                                  'tanggal':arsip.tanggal,
+                                  'deskripsi':arsip.deskripsi,
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child:_recentCard(
+                          title: arsip.judul,
+                          kategori: arsip.kategori,
+                          date: arsip.tanggal,
+                        ),
                       ),
                     ),
                   )
