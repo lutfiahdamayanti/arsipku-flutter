@@ -236,82 +236,69 @@ class _ArsipPageState extends State<ArsipPage> {
             const SizedBox(height: 25),
 
             Expanded(
-  child: Consumer<ArsipProvider>(
-    builder: (context, provider, child) {
-
-      final arsipList = provider.arsipList;
-
-      List<Arsip> filteredList = arsipList;
-
-      if (kategoriTerpilih != 'Semua') {
-        filteredList = filteredList.where((arsip) {
-          return arsip.kategori == kategoriTerpilih;
-        }).toList();
-      }
-
-      if (keyword.isNotEmpty) {
-        filteredList = filteredList.where((arsip) {
-          return arsip.judul
-              .toLowerCase()
-              .contains(keyword.toLowerCase());
-        }).toList();
-      }
-
-      if (filteredList.isEmpty) {
-        return const Center(
-          child: Text(
-            'Belum ada arsip',
-          ),
-        );
-      }
-
-      return ListView.builder(
-        itemCount: filteredList.length,
-        itemBuilder: (context, index) {
-
-          final arsip = filteredList[index];
-
-          return GestureDetector(
-            onTap: () async {
-
-              final refresh =
-                  await Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (_) =>
-                          EditArsipPage(
-                        arsip: arsip,
+              child: Consumer<ArsipProvider>(
+                builder: (context, provider, child) {
+                  final arsipList = provider.arsipList;
+                  List<Arsip> filteredList = arsipList;
+                  if (kategoriTerpilih != 'Semua') {
+                    filteredList = filteredList.where((arsip) {
+                      return arsip.kategori == kategoriTerpilih;
+                    }).toList();
+                  }
+                  if (keyword.isNotEmpty) {
+                    filteredList = filteredList.where((arsip) {
+                      return arsip.judul
+                     .toLowerCase()
+                     .contains(keyword.toLowerCase());
+                    }).toList();
+                  }
+                  if (filteredList.isEmpty) {
+                    return const Center(
+                      child: Text(
+                        'Belum ada arsip',
                       ),
-                    ),
+                    );
+                  }
+                  return ListView.builder(
+                    itemCount: filteredList.length,
+                    itemBuilder: (context, index) {
+                      final arsip = filteredList[index];
+                      return GestureDetector(
+                        onTap: () async {
+                          final refresh =
+                          await Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (_) =>
+                              EditArsipPage(
+                                arsip: arsip,
+                              ),
+                            ),
+                          );
+                          if (refresh == true) {
+                            context
+                            .read<ArsipProvider>()
+                            .loadArsip();
+                          }
+                        },
+                        child: _arsipCard(
+                          title: arsip.judul,
+                          kategori: arsip.kategori,
+                          tanggal: arsip.tanggal,
+                        ),
+                      );
+                    },
                   );
-
-              if (refresh == true) {
-
-                context
-                    .read<ArsipProvider>()
-                    .loadArsip();
-
-              }
-            },
-
-            child: _arsipCard(
-              title: arsip.judul,
-              kategori: arsip.kategori,
-              tanggal: arsip.tanggal,
-            ),
-          );
-        },
-      );
-    },
-  ),
-)
-        ],
-      ),
+                },
+              ),
+            )
+          ],
+        ),
       ),
 
       bottomNavigationBar: BottomNavigationBar(
         currentIndex: 1,
-        selectedItemColor: const Color(0xFFF48FB1),
+        selectedItemColor: const Color(0xFF9C466E),
         unselectedItemColor: Colors.grey,
         backgroundColor: Colors.white,
         type: BottomNavigationBarType.fixed,
